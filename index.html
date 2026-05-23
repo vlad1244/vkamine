@@ -1,0 +1,1348 @@
+import React, { useState, useEffect, useMemo } from 'react';
+import { 
+  ShoppingBag, 
+  Layers, 
+  TrendingUp, 
+  Wallet, 
+  Plus, 
+  Check, 
+  X, 
+  ArrowRightLeft, 
+  Flame, 
+  Sparkles, 
+  ShieldCheck, 
+  DollarSign, 
+  Clock, 
+  User, 
+  Tag, 
+  Coins,
+  ChevronRight,
+  RefreshCw,
+  Bell
+} from 'lucide-react';
+
+
+// Уникальные высококлассные SVG для наших неоновых фруктов
+const FRUIT_SVGS = {
+  banana: (className = "w-16 h-16") => (
+    <svg className={className} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <filter id="yellow-glow" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur stdDeviation="6" result="blur" />
+        <feComposite in="SourceGraphic" in2="blur" operator="over" />
+      </filter>
+      {/* Glow Effect Background */}
+      <path d="M25,75 C45,85 75,70 85,35 C88,25 82,15 75,20 C68,25 60,35 55,45 C45,60 30,68 15,65 C12,64 10,70 15,72 C18,73 22,74 25,75 Z" fill="#FFE600" opacity="0.15" filter="url(#yellow-glow)"/>
+      {/* Main Banana Shape */}
+      <path d="M22,76 C42,86 72,71 82,36 C85,26 81,18 74,21 C68,24 61,32 55,42 C46,57 32,65 17,62 C13,61 11,68 16,70 C18,72 20,74 22,76 Z" fill="url(#banana-grad)" stroke="#FFE600" strokeWidth="2.5" strokeLinecap="round" />
+      {/* Details & Highlights */}
+      <path d="M30,73 C46,79 68,66 75,38" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" opacity="0.6"/>
+      <path d="M16,62 C14,61 12,62 11,64 C10,66 11,68 13,69" stroke="#5C4D00" strokeWidth="3" strokeLinecap="round"/>
+      <path d="M82,36 L86,30 C88,27 86,25 84,26 L79,29" stroke="#5C4D00" strokeWidth="2.5" strokeLinecap="round"/>
+      <defs>
+        <linearGradient id="banana-grad" x1="15%" y1="80%" x2="80%" y2="20%">
+          <stop offset="0%" stopColor="#FFB800" />
+          <stop offset="60%" stopColor="#FFE600" />
+          <stop offset="100%" stopColor="#FFF9A6" />
+        </linearGradient>
+      </defs>
+    </svg>
+  ),
+  strawberry: (className = "w-16 h-16") => (
+    <svg className={className} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <filter id="red-glow" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur stdDeviation="5" result="blur" />
+        <feComposite in="SourceGraphic" in2="blur" operator="over" />
+      </filter>
+      {/* Glow Effect */}
+      <path d="M50,15 C65,15 85,35 85,60 C85,82 68,90 50,90 C32,90 15,82 15,60 C15,35 35,15 50,15 Z" fill="#FF2E93" opacity="0.15" filter="url(#red-glow)"/>
+      {/* Strawberry Body */}
+      <path d="M50,18 C65,18 82,35 82,58 C82,78 66,86 50,86 C34,86 18,78 18,58 C18,35 35,18 50,18 Z" fill="url(#berry-grad)" stroke="#FF2E93" strokeWidth="2.5" />
+      {/* Green Tail */}
+      <path d="M50,22 L50,10 M50,18 C45,18 38,10 38,10 M50,18 C55,18 62,10 62,10 M42,19 C35,22 28,18 28,18 M58,19 C65,22 72,18 72,18" stroke="#39FF14" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"/>
+      {/* Seeds */}
+      <circle cx="35" cy="40" r="2" fill="#FFE600" />
+      <circle cx="65" cy="40" r="2" fill="#FFE600" />
+      <circle cx="50" cy="50" r="2" fill="#FFE600" />
+      <circle cx="32" cy="60" r="2" fill="#FFE600" />
+      <circle cx="68" cy="60" r="2" fill="#FFE600" />
+      <circle cx="50" cy="70" r="2" fill="#FFE600" />
+      <circle cx="40" cy="80" r="2" fill="#FFE600" />
+      <circle cx="60" cy="80" r="2" fill="#FFE600" />
+      <defs>
+        <linearGradient id="berry-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#FF2E93" />
+          <stop offset="50%" stopColor="#FF004C" />
+          <stop offset="100%" stopColor="#9E002A" />
+        </linearGradient>
+      </defs>
+    </svg>
+  ),
+  pomegranate: (className = "w-16 h-16") => (
+    <svg className={className} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <filter id="purple-glow" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur stdDeviation="5" result="blur" />
+        <feComposite in="SourceGraphic" in2="blur" operator="over" />
+      </filter>
+      {/* Glow Effect */}
+      <circle cx="50" cy="55" r="32" fill="#BD00FF" opacity="0.12" filter="url(#purple-glow)" />
+      {/* Main Body */}
+      <circle cx="50" cy="55" r="32" fill="url(#pom-grad)" stroke="#FF007A" strokeWidth="2.5" />
+      {/* Crown */}
+      <path d="M42,24 L35,14 L44,17 L50,11 L56,17 L65,14 L58,24" fill="url(#pom-grad)" stroke="#FF007A" strokeWidth="2.5" strokeLinejoin="round" />
+      {/* Organic Texture */}
+      <path d="M30,42 C38,38 45,38 52,44 C59,50 64,48 72,42" stroke="#FF5C00" strokeWidth="1.5" strokeLinecap="round" opacity="0.4" />
+      <path d="M24,58 C32,62 48,52 56,66" stroke="#FF5C00" strokeWidth="1.5" strokeLinecap="round" opacity="0.3" />
+      <defs>
+        <linearGradient id="pom-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#FF007A" />
+          <stop offset="40%" stopColor="#9E0059" />
+          <stop offset="100%" stopColor="#4A002B" />
+        </linearGradient>
+      </defs>
+    </svg>
+  )
+};
+
+
+// Предустановленные базовые типы фруктов в лавке
+const BASE_SHOP_ITEMS = [
+  {
+    id: 'banana_base',
+    type: 'banana',
+    name: 'Каменный Банан',
+    price: 50,
+    rarity: 'Common',
+    colorClass: 'from-amber-400 to-yellow-500',
+    accentColor: '#FFE600',
+    description: 'Идеально ложится в руку. Отлит в шесть утра из жидкого солнца.',
+    stats: { hardness: '9.2 Mohs', sweetness: '65%', weight: '240g' }
+  },
+  {
+    id: 'strawberry_base',
+    type: 'strawberry',
+    name: 'Бетонная Клубника',
+    price: 75,
+    rarity: 'Rare',
+    colorClass: 'from-rose-500 to-pink-600',
+    accentColor: '#FF2E93',
+    description: 'Тяжелая, сочная, оставляет гранитный след на зубах.',
+    stats: { hardness: '8.5 Mohs', sweetness: '89%', weight: '45g' }
+  },
+  {
+    id: 'pomegranate_base',
+    type: 'pomegranate',
+    name: 'Гранитный Гранат',
+    price: 150,
+    rarity: 'Epic',
+    colorClass: 'from-purple-600 to-indigo-700',
+    accentColor: '#FF007A',
+    description: 'Взрывной вкус цивилизации. Каждое зерно — чистый рубин.',
+    stats: { hardness: '9.8 Mohs', sweetness: '92%', weight: '410g' }
+  }
+];
+
+// Первоначальные фейковые предложения на P2P рынке от других игроков
+const INITIAL_MARKETPLACE_ITEMS = [
+  {
+    id: 'nft_1024',
+    type: 'banana',
+    name: 'Каменный Банан',
+    serial: '#1024',
+    price: 120,
+    owner: 'Mikhail_Crypt',
+    originalPrice: 50,
+    mintedAt: '24.05.2026',
+    rarity: 'Common',
+    stats: { hardness: '9.2 Mohs', sweetness: '67%', weight: '242g' }
+  },
+  {
+    id: 'nft_0732',
+    type: 'strawberry',
+    name: 'Бетонная Клубника',
+    serial: '#0732',
+    price: 240,
+    owner: 'Vanya_Stone_6am',
+    originalPrice: 75,
+    mintedAt: '23.05.2026',
+    rarity: 'Rare',
+    stats: { hardness: '8.7 Mohs', sweetness: '91%', weight: '48g' }
+  },
+  {
+    id: 'nft_0112',
+    type: 'pomegranate',
+    name: 'Гранитный Гранат',
+    serial: '#0112',
+    price: 490,
+    owner: 'Liza_Stone',
+    originalPrice: 150,
+    mintedAt: '20.05.2026',
+    rarity: 'Epic',
+    stats: { hardness: '9.8 Mohs', sweetness: '95%', weight: '415g' }
+  },
+  {
+    id: 'nft_0911',
+    type: 'banana',
+    name: 'Каменный Банан',
+    serial: '#0911',
+    price: 95,
+    owner: 'Nikita_G',
+    originalPrice: 50,
+    mintedAt: '24.05.2026',
+    rarity: 'Common',
+    stats: { hardness: '9.1 Mohs', sweetness: '64%', weight: '238g' }
+  }
+];
+
+
+export default function App() {
+  // Базовые параметры пользователя Telegram
+  const tgUser = {
+    username: 'Vlad_Mikhalchenko',
+    firstName: 'Влад',
+    lastName: 'Михальченко',
+    avatarLetter: 'В'
+  };
+
+  // Симуляция баланса пользователя (в рублях)
+  const [balance, setBalance] = useState(1200);
+  
+  // Текущая вкладка: 'shop' (Минт), 'market' (P2P Рынок), 'portfolio' (Мои фрукты), 'history' (Транзакции)
+  const [activeTab, setActiveTab] = useState('shop');
+
+  // Личная коллекция фруктов пользователя
+  const [myPortfolio, setMyPortfolio] = useState([
+    {
+      id: 'nft_own_0042',
+      type: 'banana',
+      name: 'Каменный Банан',
+      serial: '#0042',
+      originalPrice: 50,
+      mintedAt: '24.05.2026, 01:04',
+      rarity: 'Common',
+      stats: { hardness: '9.3 Mohs', sweetness: '68%', weight: '245g' },
+      isListed: false,
+      marketPrice: 0
+    },
+    {
+      id: 'nft_own_0320',
+      type: 'strawberry',
+      name: 'Бетонная Клубника',
+      serial: '#0320',
+      originalPrice: 75,
+      mintedAt: '24.05.2026, 01:05',
+      rarity: 'Rare',
+      stats: { hardness: '8.9 Mohs', sweetness: '87%', weight: '44g' },
+      isListed: false,
+      marketPrice: 0
+    }
+  ]);
+
+  // Список лотов на P2P рынке
+  const [marketItems, setMarketItems] = useState(INITIAL_MARKETPLACE_ITEMS);
+
+  // Лог активности рынка
+  const [activityLog, setActivityLog] = useState([
+    { id: 1, type: 'mint', user: 'Vlad_Mikhalchenko', item: 'Бетонная Клубника #0320', price: 75, time: '3 мин. назад' },
+    { id: 2, type: 'sale', seller: 'Anton_X', buyer: 'Misha_99', item: 'Каменный Банан #0512', price: 110, commission: 5.5, time: '7 мин. назад' },
+    { id: 3, type: 'mint', user: 'Liza_Stone', item: 'Гранитный Гранат #0112', price: 150, time: '12 мин. назад' },
+    { id: 4, type: 'sale', seller: 'Dima_Stone', buyer: 'CryptoVanya', item: 'Бетонная Клубника #0214', price: 180, commission: 9, time: '15 мин. назад' }
+  ]);
+
+
+  // Состояния модальных окон
+  const [selectedShopItem, setSelectedShopItem] = useState(null);
+  const [selectedMarketItem, setSelectedMarketItem] = useState(null);
+  const [selectedPortfolioItem, setSelectedPortfolioItem] = useState(null);
+  
+  // Модалка выставления на рынок
+  const [listingItem, setListingItem] = useState(null);
+  const [listPrice, setListPrice] = useState('');
+
+  // Модалка успешного действия
+  const [successModal, setSuccessModal] = useState(null);
+
+  // Всплывающие уведомления (Toasts)
+  const [toasts, setToasts] = useState([]);
+
+  const addToast = (text, type = 'success') => {
+    const id = Date.now();
+    setToasts(prev => [...prev, { id, text, type }]);
+    setTimeout(() => {
+      setToasts(prev => prev.filter(t => t.id !== id));
+    }, 4000);
+  };
+
+
+  // Комиссионная сетка
+  const PLATFORM_FEE_PCT = 5; // 5% комиссия платформы
+  const CREATOR_ROYALTY_PCT = 2; // 2% роялти автору (нам же)
+
+  // 1. Покупка (Минт) нового фрукта у платформы
+  const handleMintFruit = (baseItem) => {
+    if (balance < baseItem.price) {
+      addToast('Недостаточно средств на балансе!', 'error');
+      return;
+    }
+
+    // Списание средств
+    setBalance(prev => prev - baseItem.price);
+
+    // Генерируем уникальный серийный номер
+    const serialNum = '#' + String(Math.floor(Math.random() * 9000) + 1000);
+    const dateStr = new Date().toLocaleString('ru-RU', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+
+    const newFruit = {
+      id: 'nft_own_' + Date.now(),
+      type: baseItem.type,
+      name: baseItem.name,
+      serial: serialNum,
+      originalPrice: baseItem.price,
+      mintedAt: dateStr,
+      rarity: baseItem.rarity,
+      stats: { ...baseItem.stats },
+      isListed: false,
+      marketPrice: 0
+    };
+
+    setMyPortfolio(prev => [newFruit, ...prev]);
+    
+    // Добавляем в историю
+    setActivityLog(prev => [
+      {
+        id: Date.now(),
+        type: 'mint',
+        user: tgUser.username,
+        item: `${baseItem.name} ${serialNum}`,
+        price: baseItem.price,
+        time: 'Только что'
+      },
+      ...prev
+    ]);
+
+    setSelectedShopItem(null);
+    setSuccessModal({
+      title: 'Права заявлены!',
+      subtitle: `Вы успешно высекли в камне фрукт:`,
+      item: newFruit,
+      message: 'Фрукт добавлен в ваше портфолио. Теперь вы можете распоряжаться своими правами на него или выставить на рынок для перепродажи.'
+    });
+
+    addToast(`Приобретен ${baseItem.name} ${serialNum}!`);
+  };
+
+  // 2. Выставление фрукта на P2P маркетплейс
+  const handleListToMarket = () => {
+    const price = parseFloat(listPrice);
+    if (isNaN(price) || price <= 0) {
+      addToast('Введите корректную цену продажи', 'error');
+      return;
+    }
+
+    if (price < 10) {
+      addToast('Минимальная цена продажи — 10 ₽', 'error');
+      return;
+    }
+
+    // Обновляем состояние в портфолио
+    setMyPortfolio(prev => prev.map(item => {
+      if (item.id === listingItem.id) {
+        return { ...item, isListed: true, marketPrice: price };
+      }
+      return item;
+    }));
+
+    // Добавляем лот на P2P рынок
+    const newMarketLot = {
+      id: listingItem.id, // сохраняем сквозной ID
+      type: listingItem.type,
+      name: listingItem.name,
+      serial: listingItem.serial,
+      price: price,
+      owner: tgUser.username,
+      originalPrice: listingItem.originalPrice,
+      mintedAt: listingItem.mintedAt,
+      rarity: listingItem.rarity,
+      stats: listingItem.stats
+    };
+
+    setMarketItems(prev => [newMarketLot, ...prev]);
+
+    // Логируем событие выставления
+    addToast(`${listingItem.name} ${listingItem.serial} выставлен на рынок за ${price} ₽!`);
+    
+    setListingItem(null);
+    setListPrice('');
+    setSelectedPortfolioItem(null);
+  };
+
+  // 3. Отмена продажи лота на рынке
+  const handleCancelSale = (itemId) => {
+    setMyPortfolio(prev => prev.map(item => {
+      if (item.id === itemId) {
+        return { ...item, isListed: false, marketPrice: 0 };
+      }
+      return item;
+    }));
+
+    setMarketItems(prev => prev.filter(item => item.id !== itemId));
+    addToast('Лот успешно снят с продажи');
+    setSelectedPortfolioItem(null);
+  };
+
+  // 4. Покупка фрукта на P2P Рынке у другого игрока
+  const handleBuyFromMarket = (marketItem) => {
+    if (balance < marketItem.price) {
+      addToast('Недостаточно средств на балансе!', 'error');
+      return;
+    }
+
+    if (marketItem.owner === tgUser.username) {
+      addToast('Вы не можете купить свой собственный фрукт!', 'error');
+      return;
+    }
+
+    // Списание средств у покупателя
+    setBalance(prev => prev - marketItem.price);
+
+    // Расчет распределения денег за перепродажу
+    const platformFee = (marketItem.price * PLATFORM_FEE_PCT) / 100;
+    const creatorRoyalty = (marketItem.price * CREATOR_ROYALTY_PCT) / 100;
+    const sellerPayout = marketItem.price - platformFee - creatorRoyalty;
+
+    // Добавляем купленный фрукт в портфолио покупателя
+    const acquiredFruit = {
+      id: marketItem.id,
+      type: marketItem.type,
+      name: marketItem.name,
+      serial: marketItem.serial,
+      originalPrice: marketItem.originalPrice,
+      mintedAt: marketItem.mintedAt,
+      rarity: marketItem.rarity,
+      stats: marketItem.stats,
+      isListed: false,
+      marketPrice: 0
+    };
+
+    setMyPortfolio(prev => [acquiredFruit, ...prev]);
+
+    // Удаляем лот из списка доступных на рынке
+    setMarketItems(prev => prev.filter(item => item.id !== marketItem.id));
+
+    // Запись в лог активности
+    setActivityLog(prev => [
+      {
+        id: Date.now(),
+        type: 'sale',
+        seller: marketItem.owner,
+        buyer: tgUser.username,
+        item: `${marketItem.name} ${marketItem.serial}`,
+        price: marketItem.price,
+        commission: platformFee,
+        time: 'Только что'
+      },
+      ...prev
+    ]);
+
+    setSelectedMarketItem(null);
+    
+    setSuccessModal({
+      title: 'Права переданы!',
+      subtitle: `Вы выкупили у ${marketItem.owner}:`,
+      item: acquiredFruit,
+      message: `Сделка совершена! Продавец получил выплату ${sellerPayout.toFixed(1)} ₽. Платформа удержала комиссию ${platformFee.toFixed(1)} ₽ (5%) и роялти ${creatorRoyalty.toFixed(1)} ₽ (2%).`
+    });
+
+    addToast(`Успешно куплен ${marketItem.name} ${marketItem.serial}!`);
+  };
+
+
+  // Фоновый бот, который периодически покупает фрукты, выставленные пользователем на маркетплейс
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // Ищем, есть ли у пользователя выставленные на продажу лоты
+      const userListedItems = myPortfolio.filter(item => item.isListed);
+      
+      if (userListedItems.length > 0) {
+        // Шанс покупки 40% каждые 15 секунд
+        if (Math.random() < 0.4) {
+          const itemToBuy = userListedItems[Math.floor(Math.random() * userListedItems.length)];
+          
+          // Выполняем авто-выкуп ботом
+          const mockBuyers = ['Dmitry_Stone6', 'Misha_NFT', 'Gleb_V_Kamne', 'FruitWhale_99', 'Alisa_Khabar', 'Solomon_Stone'];
+          const randomBuyer = mockBuyers[Math.floor(Math.random() * mockBuyers.length)];
+          const soldPrice = itemToBuy.marketPrice;
+
+          // Распределяем доходы
+          const platformFee = (soldPrice * PLATFORM_FEE_PCT) / 100;
+          const creatorRoyalty = (soldPrice * CREATOR_ROYALTY_PCT) / 100;
+          const netPayout = soldPrice - platformFee - creatorRoyalty;
+
+          // Прибавляем чистые деньги на баланс пользователя (ведь он продавец)
+          setBalance(prev => prev + netPayout);
+
+          // Убираем из портфолио пользователя (или переводим в статус "продано")
+          setMyPortfolio(prev => prev.filter(item => item.id !== itemToBuy.id));
+          
+          // Убираем лот с маркетплейса
+          setMarketItems(prev => prev.filter(item => item.id !== itemToBuy.id));
+
+          // Добавляем в историю
+          setActivityLog(prev => [
+            {
+              id: Date.now(),
+              type: 'sale',
+              seller: tgUser.username,
+              buyer: randomBuyer,
+              item: `${itemToBuy.name} ${itemToBuy.serial}`,
+              price: soldPrice,
+              commission: platformFee,
+              time: 'Только что'
+            },
+            ...prev
+          ]);
+
+          // Показываем сочный тост об успешной продаже и заработке
+          addToast(`🔥 Ваш ${itemToBuy.name} ${itemToBuy.serial} продан за ${soldPrice} ₽! Вы получили +${netPayout.toFixed(1)} ₽ (за вычетом комиссий)`, 'success');
+        }
+      }
+
+      // Дополнительно: симулируем редкий фоновый минт другими игроками, чтобы маркет казался живым
+      if (Math.random() < 0.25) {
+        const randomBase = BASE_SHOP_ITEMS[Math.floor(Math.random() * BASE_SHOP_ITEMS.length)];
+        const randomUser = ['Vasilisa_M', 'Artem_6am', 'Max_Concrete', 'Kirill_Hard'][Math.floor(Math.random() * 4)];
+        const serialNum = '#' + String(Math.floor(Math.random() * 9000) + 1000);
+
+        setActivityLog(prev => [
+          {
+            id: Date.now(),
+            type: 'mint',
+            user: randomUser,
+            item: `${randomBase.name} ${serialNum}`,
+            price: randomBase.price,
+            time: '1 мин. назад'
+          },
+          ...prev
+        ]);
+      }
+
+    }, 15000);
+
+    return () => clearInterval(interval);
+  }, [myPortfolio]);
+
+  const totalMyItemsValuation = useMemo(() => {
+    return myPortfolio.reduce((sum, item) => sum + (item.isListed ? item.marketPrice : item.originalPrice), 0);
+  }, [myPortfolio]);
+
+  return (
+    <div className="min-h-screen bg-[#0C0D12] text-neutral-100 font-sans flex flex-col justify-between max-w-md mx-auto border-x border-neutral-900 shadow-2xl relative overflow-x-hidden select-none">
+      
+      {/* Dynamic Toasts Area */}
+      <div className="absolute top-4 left-4 right-4 z-50 flex flex-col gap-2 pointer-events-none">
+        {toasts.map(toast => (
+          <div 
+            key={toast.id} 
+            className={`px-4 py-3 rounded-xl border text-sm font-medium shadow-lg backdrop-blur-md flex items-center gap-3 transition-all transform translate-y-0 animate-bounce-short pointer-events-auto ${
+              toast.type === 'error' 
+                ? 'bg-rose-950/90 border-rose-500/50 text-rose-200' 
+                : 'bg-emerald-950/90 border-emerald-500/50 text-emerald-200'
+            }`}
+          >
+            {toast.type === 'error' ? (
+              <X className="w-5 h-5 text-rose-400 shrink-0" />
+            ) : (
+              <Check className="w-5 h-5 text-emerald-400 shrink-0" />
+            )}
+            <span>{toast.text}</span>
+          </div>
+        ))}
+      </div>
+
+      {}
+      {/* Top Banner & Header */}
+      <div className="bg-gradient-to-b from-[#181B26] to-[#0C0D12] p-4 pt-6 border-b border-neutral-900/60">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-fuchsia-600 flex items-center justify-center font-bold text-neutral-950 shadow-md">
+              {tgUser.avatarLetter}
+            </div>
+            <div>
+              <div className="text-xs text-neutral-400 font-medium">Владелец прав</div>
+              <div className="text-sm font-bold flex items-center gap-1.5 text-neutral-100">
+                @{tgUser.username}
+                <ShieldCheck className="w-4 h-4 text-cyan-400" />
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2.5 bg-neutral-900/90 border border-neutral-800 rounded-xl px-3 py-1.5">
+            <Wallet className="w-4 h-4 text-cyan-400" />
+            <span className="text-sm font-bold tracking-tight text-cyan-400">{balance.toLocaleString('ru-RU')} ₽</span>
+          </div>
+        </div>
+
+        {/* Brand Identity Board */}
+        <div className="bg-gradient-to-r from-neutral-950 via-neutral-900 to-neutral-950 border border-neutral-800 rounded-2xl p-4 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-500/5 rounded-full filter blur-xl pointer-events-none"></div>
+          <div className="absolute -bottom-10 -left-10 w-24 h-24 bg-fuchsia-500/5 rounded-full filter blur-lg pointer-events-none"></div>
+          
+          <div className="flex justify-between items-start">
+            <div>
+              <span className="text-[10px] bg-cyan-950 border border-cyan-800 text-cyan-400 px-2 py-0.5 rounded-full font-bold uppercase tracking-widest">
+                Статус: Наследие
+              </span>
+              <h1 className="text-xl font-black tracking-wider text-neutral-100 uppercase mt-2 font-mono">
+                В КАМНЕ <span className="text-cyan-400">//</span> 6:00
+              </h1>
+              <p className="text-[11px] text-neutral-400 mt-1">
+                Перепродавай права на неоновые фрукты. Закрепляй владение навечно.
+              </p>
+            </div>
+            <div className="text-right">
+              <div className="text-[10px] text-neutral-500 font-bold uppercase tracking-wider">Роялти платформы</div>
+              <div className="text-lg font-black text-fuchsia-400 mt-1">2.0%</div>
+              <div className="text-[9px] text-neutral-400 font-medium">нашим холдерам</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {}
+      {/* Navigation Tabs Bar */}
+      <div className="px-4 py-2 bg-[#0C0D12] sticky top-0 z-30">
+        <div className="grid grid-cols-4 gap-1 bg-neutral-950/80 p-1 rounded-xl border border-neutral-900/80 backdrop-blur-md">
+          <button 
+            onClick={() => setActiveTab('shop')}
+            className={`py-2 px-1 rounded-lg text-xs font-bold transition-all flex flex-col items-center gap-1 ${
+              activeTab === 'shop' 
+                ? 'bg-neutral-900 text-cyan-400 shadow-sm border border-neutral-800/80' 
+                : 'text-neutral-400 hover:text-neutral-200'
+            }`}
+          >
+            <ShoppingBag className="w-4 h-4" />
+            <span>Лавка</span>
+          </button>
+          
+          <button 
+            onClick={() => setActiveTab('market')}
+            className={`py-2 px-1 rounded-lg text-xs font-bold transition-all flex flex-col items-center gap-1 ${
+              activeTab === 'market' 
+                ? 'bg-neutral-900 text-cyan-400 shadow-sm border border-neutral-800/80' 
+                : 'text-neutral-400 hover:text-neutral-200'
+            }`}
+          >
+            <TrendingUp className="w-4 h-4" />
+            <span>P2P Рынок</span>
+          </button>
+
+          <button 
+            onClick={() => setActiveTab('portfolio')}
+            className={`py-2 px-1 rounded-lg text-xs font-bold transition-all flex flex-col items-center gap-1 relative ${
+              activeTab === 'portfolio' 
+                ? 'bg-neutral-900 text-cyan-400 shadow-sm border border-neutral-800/80' 
+                : 'text-neutral-400 hover:text-neutral-200'
+            }`}
+          >
+            {myPortfolio.length > 0 && (
+              <span className="absolute top-1.5 right-4 w-2 h-2 bg-fuchsia-500 rounded-full"></span>
+            )}
+            <Layers className="w-4 h-4" />
+            <span>Мои права</span>
+          </button>
+
+          <button 
+            onClick={() => setActiveTab('history')}
+            className={`py-2 px-1 rounded-lg text-xs font-bold transition-all flex flex-col items-center gap-1 ${
+              activeTab === 'history' 
+                ? 'bg-neutral-900 text-cyan-400 shadow-sm border border-neutral-800/80' 
+                : 'text-neutral-400 hover:text-neutral-200'
+            }`}
+          >
+            <ArrowRightLeft className="w-4 h-4" />
+            <span>Активность</span>
+          </button>
+        </div>
+      </div>
+
+      {}
+      {/* Main Scrollable Content */}
+      <div className="flex-1 overflow-y-auto px-4 py-3 pb-24">
+        
+        {activeTab === 'shop' && (
+          <div className="space-y-4 animate-fadeIn">
+            {/* Promo Banner inside Shop */}
+            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-cyan-950/40 via-neutral-900/60 to-fuchsia-950/40 border border-neutral-800 p-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-cyan-950 border border-cyan-800 rounded-xl">
+                  <Flame className="w-5 h-5 text-cyan-400 animate-pulse" />
+                </div>
+                <div>
+                  <h3 className="text-xs font-extrabold uppercase text-cyan-400 tracking-wider">Первичный Минт Фруктов</h3>
+                  <p className="text-[11px] text-neutral-400 mt-0.5">Покупая здесь, вы становитесь первым правообладателем. Любой созданный фрукт можно мгновенно перепродать на рынке по своей цене!</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 gap-4">
+              {BASE_SHOP_ITEMS.map((item) => (
+                <div 
+                  key={item.id}
+                  className="bg-[#12141C] border border-neutral-900 rounded-2xl p-4 flex items-center justify-between hover:border-neutral-800/80 transition-all duration-300 relative group overflow-hidden"
+                >
+                  <div className="absolute top-0 right-0 w-24 h-24 bg-neutral-900/40 rounded-full filter blur-xl pointer-events-none group-hover:bg-cyan-500/5 transition-all"></div>
+                  
+                  <div className="flex items-center gap-4">
+                    <div className="p-2.5 bg-neutral-950 border border-neutral-800 rounded-2xl group-hover:scale-105 transition-transform duration-300">
+                      {FRUIT_SVGS[item.type]("w-16 h-16")}
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className={`text-[9px] px-2 py-0.5 rounded font-bold tracking-wider uppercase ${
+                          item.rarity === 'Epic' ? 'bg-purple-950 text-purple-400 border border-purple-800' :
+                          item.rarity === 'Rare' ? 'bg-rose-950 text-rose-400 border border-rose-800' :
+                          'bg-neutral-950 text-neutral-400 border border-neutral-800'
+                        }`}>
+                          {item.rarity}
+                        </span>
+                      </div>
+                      <h3 className="text-md font-bold text-neutral-100 mt-1">{item.name}</h3>
+                      <p className="text-[11px] text-neutral-400 max-w-[180px] line-clamp-2 mt-0.5 leading-relaxed">{item.description}</p>
+                    </div>
+                  </div>
+
+                  <div className="text-right flex flex-col items-end gap-2 shrink-0">
+                    <div>
+                      <div className="text-[10px] text-neutral-500 font-bold uppercase">Цена входа</div>
+                      <div className="text-lg font-black text-neutral-100 mt-0.5">{item.price} ₽</div>
+                    </div>
+                    <button 
+                      onClick={() => setSelectedShopItem(item)}
+                      className="bg-neutral-100 hover:bg-white text-neutral-950 text-xs font-black px-3.5 py-2 rounded-xl flex items-center gap-1 transition-all shadow-md group-hover:shadow-neutral-950"
+                    >
+                      <Plus className="w-3.5 h-3.5" />
+                      <span>Взять</span>
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Quick Stat Footer */}
+            <div className="bg-neutral-950 border border-neutral-900 rounded-2xl p-4 text-center">
+              <span className="text-xs text-neutral-400">🔥 Все права оформляются во внутреннем децентрализованном реестре «В камне» с фиксированной комиссией сделки.</span>
+            </div>
+          </div>
+        )}
+
+        {}
+        {activeTab === 'market' && (
+          <div className="space-y-4 animate-fadeIn">
+            {/* Marketplace Info Header */}
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-sm font-bold text-neutral-300">P2P Каталог предложений</h2>
+                <p className="text-[10px] text-neutral-500">Покупайте напрямую у владельцев прав</p>
+              </div>
+              <div className="text-xs text-neutral-400 flex items-center gap-1.5 bg-neutral-900 border border-neutral-800 px-2.5 py-1.5 rounded-lg">
+                <Coins className="w-3.5 h-3.5 text-fuchsia-400" />
+                <span>Комса: 5% + 2%</span>
+              </div>
+            </div>
+
+            {marketItems.length === 0 ? (
+              <div className="bg-[#12141C] border border-neutral-900 rounded-2xl p-10 text-center flex flex-col items-center justify-center">
+                <ShoppingBag className="w-12 h-12 text-neutral-700 mb-3" />
+                <h3 className="text-sm font-bold text-neutral-400">Рынок пуст</h3>
+                <p className="text-xs text-neutral-500 max-w-[200px] mt-1">Никто еще не выставил свои фрукты. Станьте первым во вкладке «Мои права»!</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 gap-3">
+                {marketItems.map((item) => (
+                  <div 
+                    key={item.id}
+                    className="bg-[#12141C] border border-neutral-900/80 rounded-2xl p-3 flex flex-col justify-between hover:border-neutral-800 transition-all duration-300 relative group overflow-hidden"
+                  >
+                    {/* Tiny rarity indicator on top */}
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-[9px] text-neutral-400 font-bold uppercase font-mono">{item.serial}</span>
+                      <span className={`text-[8px] px-1.5 py-0.5 rounded font-bold uppercase ${
+                        item.rarity === 'Epic' ? 'bg-purple-950/60 text-purple-400' :
+                        item.rarity === 'Rare' ? 'bg-rose-950/60 text-rose-400' :
+                        'bg-neutral-950/60 text-neutral-400'
+                      }`}>
+                        {item.rarity}
+                      </span>
+                    </div>
+
+                    <div className="flex justify-center py-2 relative">
+                      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-cyan-500/5 filter blur-xl rounded-full"></div>
+                      {FRUIT_SVGS[item.type]("w-20 h-20")}
+                    </div>
+
+                    <div className="mt-2">
+                      <h4 className="text-xs font-bold text-neutral-200 line-clamp-1">{item.name}</h4>
+                      <div className="flex items-center gap-1 mt-1">
+                        <User className="w-3 h-3 text-neutral-500" />
+                        <span className="text-[10px] text-neutral-400 line-clamp-1">@{item.owner}</span>
+                      </div>
+                    </div>
+
+                    <div className="border-t border-neutral-900 mt-2.5 pt-2 flex items-center justify-between">
+                      <div>
+                        <div className="text-[8px] text-neutral-500 font-bold uppercase">Плата</div>
+                        <div className="text-sm font-extrabold text-neutral-100">{item.price} ₽</div>
+                      </div>
+
+                      {item.owner === tgUser.username ? (
+                        <span className="text-[9px] bg-cyan-950 text-cyan-400 border border-cyan-800 px-2 py-1 rounded-lg font-bold">Ваш лот</span>
+                      ) : (
+                        <button 
+                          onClick={() => setSelectedMarketItem(item)}
+                          className="bg-neutral-100 hover:bg-white text-neutral-950 font-black text-[10px] px-3 py-1.5 rounded-xl transition-all shadow"
+                        >
+                          Купить
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {}
+        {activeTab === 'portfolio' && (
+          <div className="space-y-4 animate-fadeIn">
+            {/* Portfolio Analytics Card */}
+            <div className="bg-gradient-to-r from-neutral-900 to-neutral-950 border border-neutral-800 rounded-2xl p-4 flex justify-between items-center relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-16 h-16 bg-cyan-500/10 rounded-full filter blur-xl pointer-events-none"></div>
+              <div>
+                <span className="text-[9px] text-neutral-500 font-bold uppercase tracking-wider">Всего под вашим контролем</span>
+                <h3 className="text-2xl font-black text-neutral-100 mt-0.5">{myPortfolio.length} <span className="text-xs font-medium text-neutral-400">фруктов</span></h3>
+                <span className="text-[10px] text-neutral-400 mt-1 block">Оценка капитала: ~{totalMyItemsValuation.toLocaleString('ru-RU')} ₽</span>
+              </div>
+              <div className="p-3 bg-neutral-950 border border-neutral-800 rounded-2xl text-center">
+                <div className="text-[9px] text-neutral-500 font-bold uppercase">Мои доходы</div>
+                <div className="text-sm font-bold text-emerald-400 mt-0.5">0.0 ₽</div>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <h2 className="text-sm font-bold text-neutral-300">Моя коллекция прав</h2>
+              <p className="text-[10px] text-neutral-500">Заявлены в реестре «В камне»</p>
+            </div>
+
+            {myPortfolio.length === 0 ? (
+              <div className="bg-[#12141C] border border-neutral-900 rounded-2xl p-10 text-center flex flex-col items-center justify-center">
+                <Layers className="w-12 h-12 text-neutral-700 mb-3" />
+                <h3 className="text-sm font-bold text-neutral-400">У вас пока нет прав на фрукты</h3>
+                <p className="text-xs text-neutral-500 max-w-[200px] mt-1">Перейдите в Лавку, чтобы выкупить свой первый фрукт всего за 50 ₽!</p>
+                <button 
+                  onClick={() => setActiveTab('shop')}
+                  className="mt-4 bg-neutral-100 hover:bg-white text-neutral-950 font-black text-xs px-4 py-2 rounded-xl"
+                >
+                  В Лавку за правами
+                </button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 gap-3">
+                {myPortfolio.map((item) => (
+                  <div 
+                    key={item.id}
+                    className={`bg-[#12141C] border rounded-2xl p-4 flex items-center justify-between transition-all duration-300 relative overflow-hidden group ${
+                      item.isListed ? 'border-fuchsia-950' : 'border-neutral-900 hover:border-neutral-800'
+                    }`}
+                  >
+                    {item.isListed && (
+                      <div className="absolute top-0 left-0 bg-gradient-to-r from-fuchsia-600 to-pink-600 text-neutral-950 text-[8px] font-black tracking-widest px-2.5 py-0.5 uppercase rounded-br-lg shadow-sm">
+                        На P2P рынке за {item.marketPrice} ₽
+                      </div>
+                    )}
+
+                    <div className="flex items-center gap-4 mt-2">
+                      <div className="p-2 bg-neutral-950 border border-neutral-800 rounded-xl shrink-0">
+                        {FRUIT_SVGS[item.type]("w-14 h-14")}
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-[10px] text-neutral-400 font-mono font-bold">{item.serial}</span>
+                          <span className={`text-[8px] px-1.5 py-0.2 rounded font-bold uppercase ${
+                            item.rarity === 'Epic' ? 'bg-purple-950 text-purple-400' :
+                            item.rarity === 'Rare' ? 'bg-rose-950 text-rose-400' :
+                            'bg-neutral-950 text-neutral-400'
+                          }`}>
+                            {item.rarity}
+                          </span>
+                        </div>
+                        <h4 className="text-sm font-bold text-neutral-200 mt-1">{item.name}</h4>
+                        <span className="text-[9px] text-neutral-500 block">Выкуплен: {item.mintedAt}</span>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col items-end gap-2 shrink-0">
+                      <button 
+                        onClick={() => setSelectedPortfolioItem(item)}
+                        className="bg-neutral-900 border border-neutral-800 hover:border-neutral-700 text-neutral-200 hover:text-white text-[11px] font-bold px-3 py-1.5 rounded-xl transition-all"
+                      >
+                        Опции
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {}
+        {activeTab === 'history' && (
+          <div className="space-y-4 animate-fadeIn">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-sm font-bold text-neutral-300">Публичный реестр сделок</h2>
+                <p className="text-[10px] text-neutral-500">Все операции со сквозной верификацией</p>
+              </div>
+              <button 
+                onClick={() => addToast('Реестр обновлен')}
+                className="p-2 bg-neutral-900 border border-neutral-800 rounded-xl hover:bg-neutral-800 text-neutral-400 transition-all"
+              >
+                <RefreshCw className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="bg-neutral-950 border border-neutral-900 rounded-2xl p-4 space-y-3.5">
+              {activityLog.map((log) => (
+                <div key={log.id} className="flex items-start justify-between text-xs border-b border-neutral-900 pb-3 last:border-0 last:pb-0">
+                  <div className="flex items-start gap-2.5">
+                    <div className="mt-0.5">
+                      {log.type === 'mint' ? (
+                        <div className="w-6 h-6 rounded-lg bg-emerald-950/60 border border-emerald-800 flex items-center justify-center text-[10px] text-emerald-400 font-bold">М</div>
+                      ) : (
+                        <div className="w-6 h-6 rounded-lg bg-cyan-950/60 border border-cyan-800 flex items-center justify-center text-[10px] text-cyan-400 font-bold">С</div>
+                      )}
+                    </div>
+                    
+                    <div>
+                      {log.type === 'mint' ? (
+                        <div>
+                          <span className="text-neutral-300 font-semibold">@{log.user}</span>
+                          <span className="text-neutral-500"> выкупил права на </span>
+                          <span className="text-neutral-200 font-medium">{log.item}</span>
+                        </div>
+                      ) : (
+                        <div>
+                          <span className="text-neutral-300 font-semibold">@{log.seller}</span>
+                          <span className="text-neutral-500"> перепродал </span>
+                          <span className="text-neutral-200 font-medium">{log.item}</span>
+                          <span className="text-neutral-500"> пользователю </span>
+                          <span className="text-neutral-300 font-semibold">@{log.buyer}</span>
+                        </div>
+                      )}
+                      <span className="text-[10px] text-neutral-600 block mt-0.5">{log.time}</span>
+                    </div>
+                  </div>
+
+                  <div className="text-right shrink-0">
+                    <div className="font-bold text-neutral-200">{log.price} ₽</div>
+                    {log.type === 'sale' && (
+                      <div className="text-[9px] text-fuchsia-400">комса: {log.commission.toFixed(1)} ₽</div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="bg-[#12141C] border border-neutral-900 rounded-2xl p-4 flex items-center gap-3">
+              <ShieldCheck className="w-8 h-8 text-cyan-500 shrink-0" />
+              <div>
+                <h4 className="text-xs font-bold text-neutral-300">Абсолютное право владения</h4>
+                <p className="text-[10px] text-neutral-500 mt-0.5">Каждая покупка и перепродажа навсегда фиксируется в реестре. Никаких споров и двойных продаж.</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+      </div>
+
+      {}
+      {/* Bottom Telegram Mimic Fixed Footer */}
+      <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-[#0C0D12]/95 border-t border-neutral-900/80 backdrop-blur-md px-4 py-3 flex items-center justify-between z-40">
+        <div className="flex items-center gap-2">
+          <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></div>
+          <span className="text-[10px] font-mono tracking-widest uppercase text-neutral-500">Telegram Web App</span>
+        </div>
+        <div className="text-[10px] text-neutral-400 font-bold bg-neutral-900 border border-neutral-800 px-2.5 py-1 rounded-lg">
+          В КАМНЕ // ВЫПУСК 1.0
+        </div>
+      </div>
+
+      {}
+      {/* 1. Modal for Shop Minting Confirmation */}
+      {selectedShopItem && (
+        <div className="fixed inset-0 bg-neutral-950/80 backdrop-blur-md z-50 flex flex-col justify-end max-w-md mx-auto">
+          <div className="bg-[#12141C] border-t border-neutral-900 rounded-t-[2rem] p-6 space-y-6 animate-slideUp">
+            
+            {/* Header / Dismiss */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-cyan-400" />
+                <h3 className="text-lg font-black text-neutral-100">Заявление прав на фрукт</h3>
+              </div>
+              <button 
+                onClick={() => setSelectedShopItem(null)}
+                className="p-1.5 bg-neutral-900 hover:bg-neutral-800 rounded-full text-neutral-400 transition-all"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Fruit Display */}
+            <div className="bg-neutral-950 border border-neutral-900 rounded-2xl p-4 flex items-center gap-4">
+              <div className="p-2 bg-neutral-900/60 border border-neutral-800 rounded-2xl shrink-0">
+                {FRUIT_SVGS[selectedShopItem.type]("w-20 h-20")}
+              </div>
+              <div className="space-y-1">
+                <span className="text-[9px] bg-cyan-950/80 border border-cyan-800 text-cyan-400 px-2 py-0.5 rounded font-bold uppercase">
+                  Релиз: {selectedShopItem.rarity}
+                </span>
+                <h4 className="text-md font-bold text-neutral-100">{selectedShopItem.name}</h4>
+                <p className="text-xs text-neutral-400 leading-normal">{selectedShopItem.description}</p>
+              </div>
+            </div>
+
+            {/* Specifications */}
+            <div className="space-y-2">
+              <div className="text-[10px] text-neutral-500 font-bold uppercase tracking-wider">Характеристики объекта</div>
+              <div className="grid grid-cols-3 gap-2">
+                <div className="bg-neutral-950 border border-neutral-900 rounded-xl p-2.5 text-center">
+                  <div className="text-[8px] text-neutral-500 uppercase">Прочность</div>
+                  <div className="text-xs font-bold text-neutral-200 mt-0.5">{selectedShopItem.stats.hardness}</div>
+                </div>
+                <div className="bg-neutral-950 border border-neutral-900 rounded-xl p-2.5 text-center">
+                  <div className="text-[8px] text-neutral-500 uppercase">Сладость</div>
+                  <div className="text-xs font-bold text-neutral-200 mt-0.5">{selectedShopItem.stats.sweetness}</div>
+                </div>
+                <div className="bg-neutral-950 border border-neutral-900 rounded-xl p-2.5 text-center">
+                  <div className="text-[8px] text-neutral-500 uppercase">Масса</div>
+                  <div className="text-xs font-bold text-neutral-200 mt-0.5">{selectedShopItem.stats.weight}</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Cost Summary */}
+            <div className="bg-neutral-950 border border-neutral-900 rounded-2xl p-4 flex justify-between items-center">
+              <div>
+                <span className="text-xs text-neutral-400">Стоимость регистрации прав</span>
+                <p className="text-[10px] text-emerald-400 mt-0.5">Включает налог за штамп в камне</p>
+              </div>
+              <div className="text-right">
+                <div className="text-xl font-black text-neutral-100">{selectedShopItem.price} ₽</div>
+                <div className="text-[10px] text-neutral-500 font-medium">разовый платеж</div>
+              </div>
+            </div>
+
+            {/* Purchase CTA */}
+            <div className="space-y-3">
+              <button 
+                onClick={() => handleMintFruit(selectedShopItem)}
+                disabled={balance < selectedShopItem.price}
+                className={`w-full py-4 rounded-2xl font-black text-sm flex items-center justify-center gap-2 shadow-lg transition-all ${
+                  balance >= selectedShopItem.price 
+                    ? 'bg-neutral-100 hover:bg-white text-neutral-950 shadow-neutral-950/20' 
+                    : 'bg-neutral-900 text-neutral-600 border border-neutral-800 cursor-not-allowed'
+                }`}
+              >
+                <Coins className="w-4 h-4" />
+                <span>Оплатить {selectedShopItem.price} ₽</span>
+              </button>
+              
+              {balance < selectedShopItem.price && (
+                <p className="text-[10px] text-rose-400 text-center font-bold">Недостаточно рублей на балансе. Вам не хватает {(selectedShopItem.price - balance).toFixed(1)} ₽</p>
+              )}
+            </div>
+
+          </div>
+        </div>
+      )}
+
+      {}
+      {/* 2. Modal for Marketplace Buy Confirmation */}
+      {selectedMarketItem && (
+        <div className="fixed inset-0 bg-neutral-950/80 backdrop-blur-md z-50 flex flex-col justify-end max-w-md mx-auto">
+          <div className="bg-[#12141C] border-t border-neutral-900 rounded-t-[2rem] p-6 space-y-6 animate-slideUp">
+            
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <ArrowRightLeft className="w-5 h-5 text-cyan-400" />
+                <h3 className="text-lg font-black text-neutral-100">Покупка прав с рынка</h3>
+              </div>
+              <button 
+                onClick={() => setSelectedMarketItem(null)}
+                className="p-1.5 bg-neutral-900 hover:bg-neutral-800 rounded-full text-neutral-400 transition-all"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Lot details */}
+            <div className="bg-neutral-950 border border-neutral-900 rounded-2xl p-4 flex items-center gap-4">
+              <div className="p-2 bg-neutral-900/60 border border-neutral-800 rounded-2xl shrink-0">
+                {FRUIT_SVGS[selectedMarketItem.type]("w-20 h-20")}
+              </div>
+              <div className="space-y-1">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-xs font-mono font-black text-neutral-200">{selectedMarketItem.serial}</span>
+                  <span className="text-[9px] bg-rose-950 border border-rose-800 text-rose-400 px-2 py-0.5 rounded font-bold uppercase">
+                    {selectedMarketItem.rarity}
+                  </span>
+                </div>
+                <h4 className="text-md font-bold text-neutral-100">{selectedMarketItem.name}</h4>
+                <p className="text-xs text-neutral-400 leading-normal">Предыдущий владелец: <span className="text-cyan-400 font-bold">@{selectedMarketItem.owner}</span></p>
+              </div>
+            </div>
+
+            {/* Split Distribution Calculation (Transparency is premium) */}
+            <div className="space-y-2">
+              <div className="text-[10px] text-neutral-500 font-bold uppercase tracking-wider">Прозрачность сделки (P2P Split)</div>
+              <div className="bg-neutral-950 border border-neutral-900 rounded-xl p-3.5 space-y-2.5 text-xs">
+                <div className="flex justify-between items-center text-neutral-400">
+                  <span>Цена продажи продавцом:</span>
+                  <span className="font-bold text-neutral-200">{selectedMarketItem.price} ₽</span>
+                </div>
+                <div className="flex justify-between items-center text-neutral-400">
+                  <span className="flex items-center gap-1">Комиссия «В камне» (5%): <span className="text-[9px] text-neutral-500 font-normal">поддержка серверов</span></span>
+                  <span className="font-bold text-fuchsia-400">- {((selectedMarketItem.price * PLATFORM_FEE_PCT) / 100).toFixed(1)} ₽</span>
+                </div>
+                <div className="flex justify-between items-center text-neutral-400">
+                  <span className="flex items-center gap-1">Роялти создателю (2%): <span className="text-[9px] text-neutral-500 font-normal">авторский сбор</span></span>
+                  <span className="font-bold text-fuchsia-400">- {((selectedMarketItem.price * CREATOR_ROYALTY_PCT) / 100).toFixed(1)} ₽</span>
+                </div>
+                <div className="border-t border-neutral-900 pt-2.5 flex justify-between items-center font-bold text-neutral-200">
+                  <span>Продавец получит чистыми:</span>
+                  <span className="text-emerald-400">{(selectedMarketItem.price - (selectedMarketItem.price * (PLATFORM_FEE_PCT + CREATOR_ROYALTY_PCT)) / 100).toFixed(1)} ₽</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Transaction Button */}
+            <div className="space-y-3">
+              <button 
+                onClick={() => handleBuyFromMarket(selectedMarketItem)}
+                disabled={balance < selectedMarketItem.price}
+                className={`w-full py-4 rounded-2xl font-black text-sm flex items-center justify-center gap-2 shadow-lg transition-all ${
+                  balance >= selectedMarketItem.price 
+                    ? 'bg-neutral-100 hover:bg-white text-neutral-950 shadow-neutral-950/20' 
+                    : 'bg-neutral-900 text-neutral-600 border border-neutral-800 cursor-not-allowed'
+                }`}
+              >
+                <Check className="w-4 h-4" />
+                <span>Купить за {selectedMarketItem.price} ₽</span>
+              </button>
+              
+              {balance < selectedMarketItem.price && (
+                <p className="text-[10px] text-rose-400 text-center font-bold">Недостаточно рублей на балансе. Вам не хватает {(selectedMarketItem.price - balance).toFixed(1)} ₽</p>
+              )}
+            </div>
+
+          </div>
+        </div>
+      )}
+
+      {}
+      {/* 3. Modal for Portfolio Item Options */}
+      {selectedPortfolioItem && (
+        <div className="fixed inset-0 bg-neutral-950/80 backdrop-blur-md z-50 flex flex-col justify-end max-w-md mx-auto">
+          <div className="bg-[#12141C] border-t border-neutral-900 rounded-t-[2rem] p-6 space-y-6 animate-slideUp">
+            
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Layers className="w-5 h-5 text-cyan-400" />
+                <h3 className="text-lg font-black text-neutral-100">Управление правами</h3>
+              </div>
+              <button 
+                onClick={() => setSelectedPortfolioItem(null)}
+                className="p-1.5 bg-neutral-900 hover:bg-neutral-800 rounded-full text-neutral-400 transition-all"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Item Profile */}
+            <div className="bg-neutral-950 border border-neutral-900 rounded-2xl p-4 flex items-center gap-4">
+              <div className="p-2 bg-neutral-900/60 border border-neutral-800 rounded-2xl shrink-0">
+                {FRUIT_SVGS[selectedPortfolioItem.type]("w-20 h-20")}
+              </div>
+              <div className="space-y-1">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-xs font-mono font-black text-neutral-200">{selectedPortfolioItem.serial}</span>
+                  <span className="text-[9px] bg-cyan-950 border border-cyan-800 text-cyan-400 px-2 py-0.5 rounded font-bold uppercase">
+                    {selectedPortfolioItem.rarity}
+                  </span>
+                </div>
+                <h4 className="text-md font-bold text-neutral-100">{selectedPortfolioItem.name}</h4>
+                <p className="text-[10px] text-neutral-500 leading-normal">Собственность заявлена: {selectedPortfolioItem.mintedAt}</p>
+              </div>
+            </div>
+
+            {/* Info Grid */}
+            <div className="grid grid-cols-2 gap-2 text-xs">
+              <div className="bg-neutral-950 border border-neutral-900 rounded-xl p-3">
+                <div className="text-[8px] text-neutral-500 uppercase">Цена при минте</div>
+                <div className="text-sm font-bold text-neutral-300 mt-1">{selectedPortfolioItem.originalPrice} ₽</div>
+              </div>
+              <div className="bg-neutral-950 border border-neutral-900 rounded-xl p-3">
+                <div className="text-[8px] text-neutral-500 uppercase">Статус лота</div>
+                <div className={`text-sm font-bold mt-1 ${selectedPortfolioItem.isListed ? 'text-fuchsia-400' : 'text-emerald-400'}`}>
+                  {selectedPortfolioItem.isListed ? 'Продается' : 'В кошельке'}
+                </div>
+              </div>
+            </div>
+
+            {/* Action CTAs */}
+            <div className="space-y-3 pt-2">
+              {!selectedPortfolioItem.isListed ? (
+                <button 
+                  onClick={() => {
+                    setListingItem(selectedPortfolioItem);
+                    setListPrice('');
+                  }}
+                  className="w-full py-4 bg-neutral-100 hover:bg-white text-neutral-950 rounded-2xl font-black text-sm flex items-center justify-center gap-2 shadow"
+                >
+                  <Tag className="w-4 h-4" />
+                  <span>Выставить на P2P рынок</span>
+                </button>
+              ) : (
+                <button 
+                  onClick={() => handleCancelSale(selectedPortfolioItem.id)}
+                  className="w-full py-4 bg-rose-950/60 border border-rose-800 text-rose-200 hover:bg-rose-950 hover:text-rose-100 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 transition-all"
+                >
+                  <X className="w-4 h-4" />
+                  <span>Снять с продажи на рынке</span>
+                </button>
+              )}
+            </div>
+
+          </div>
+        </div>
+      )}
+
+      {}
+      {/* 4. Modal to set Price when Listing */}
+      {listingItem && (
+        <div className="fixed inset-0 bg-neutral-950/90 backdrop-blur-md z-50 flex flex-col justify-end max-w-md mx-auto">
+          <div className="bg-[#12141C] border-t border-neutral-900 rounded-t-[2rem] p-6 space-y-6 animate-slideUp">
+            
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Tag className="w-5 h-5 text-cyan-400" />
+                <h3 className="text-lg font-black text-neutral-100">Укажите цену продажи</h3>
+              </div>
+              <button 
+                onClick={() => setListingItem(null)}
+                className="p-1.5 bg-neutral-900 hover:bg-neutral-800 rounded-full text-neutral-400 transition-all"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Input Element */}
+            <div className="space-y-2">
+              <label className="text-[10px] text-neutral-500 font-bold uppercase tracking-wider block">Желаемая сумма в рублях</label>
+              <div className="relative">
+                <input 
+                  type="number"
+                  placeholder="Например, 150"
+                  value={listPrice}
+                  onChange={(e) => setListPrice(e.target.value)}
+                  className="w-full bg-neutral-950 border border-neutral-800 rounded-2xl px-5 py-4 text-lg font-bold text-neutral-100 focus:outline-none focus:border-cyan-500 transition-all pr-12"
+                />
+                <span className="absolute right-5 top-1/2 -translate-y-1/2 font-bold text-neutral-400">₽</span>
+              </div>
+            </div>
+
+            {/* Interactive Fee Preview */}
+            {listPrice && parseFloat(listPrice) > 0 && (
+              <div className="bg-neutral-950 border border-neutral-900 rounded-2xl p-4 space-y-2 text-xs">
+                <div className="flex justify-between text-neutral-400">
+                  <span>Цена на витрине:</span>
+                  <span className="font-bold text-neutral-200">{listPrice} ₽</span>
+                </div>
+                <div className="flex justify-between text-neutral-400">
+                  <span>Сервисный сбор платформы (5%):</span>
+                  <span className="font-bold text-rose-500">- {(parseFloat(listPrice) * 0.05).toFixed(1)} ₽</span>
+                </div>
+                <div className="flex justify-between text-neutral-400">
+                  <span>Сбор за роялти (2%):</span>
+                  <span className="font-bold text-rose-500">- {(parseFloat(listPrice) * 0.02).toFixed(1)} ₽</span>
+                </div>
+                <div className="border-t border-neutral-900 pt-2 flex justify-between font-bold text-neutral-200">
+                  <span>Вы получите при покупке:</span>
+                  <span className="text-emerald-400">{(parseFloat(listPrice) * 0.93).toFixed(1)} ₽</span>
+                </div>
+              </div>
+            )}
+
+            <button 
+              onClick={handleListToMarket}
+              className="w-full py-4 bg-gradient-to-r from-cyan-500 to-fuchsia-600 hover:opacity-90 text-neutral-950 rounded-2xl font-black text-sm flex items-center justify-center gap-2 shadow-lg"
+            >
+              <Check className="w-4 h-4" />
+              <span>Опубликовать лот</span>
+            </button>
+
+          </div>
+        </div>
+      )}
+
+      {}
+      {/* 5. Success Action Feedback Modal */}
+      {successModal && (
+        <div className="fixed inset-0 bg-neutral-950/90 backdrop-blur-md z-50 flex flex-col justify-center p-6 max-w-md mx-auto">
+          <div className="bg-[#12141C] border border-neutral-900 rounded-[2rem] p-6 space-y-6 text-center max-w-sm mx-auto shadow-2xl animate-scaleIn">
+            
+            {/* Large Check Badge */}
+            <div className="mx-auto w-16 h-16 bg-emerald-950/60 border border-emerald-500/50 rounded-full flex items-center justify-center text-emerald-400">
+              <Check className="w-8 h-8" />
+            </div>
+
+            <div className="space-y-2">
+              <h3 className="text-xl font-black text-neutral-100">{successModal.title}</h3>
+              <p className="text-xs text-neutral-400">{successModal.subtitle}</p>
+            </div>
+
+            {/* Item Card View inside Modal */}
+            {successModal.item && (
+              <div className="bg-neutral-950 border border-neutral-900 rounded-2xl p-4 flex flex-col items-center gap-2">
+                {FRUIT_SVGS[successModal.item.type]("w-20 h-20")}
+                <div>
+                  <div className="text-xs font-mono text-neutral-400 font-bold">{successModal.item.name} {successModal.item.serial}</div>
+                  <span className="text-[10px] text-neutral-600 font-semibold uppercase">{successModal.item.rarity}</span>
+                </div>
+              </div>
+            )}
+
+            <p className="text-xs text-neutral-400 leading-relaxed px-2">
+              {successModal.message}
+            </p>
+
+            <button 
+              onClick={() => setSuccessModal(null)}
+              className="w-full py-4 bg-neutral-100 hover:bg-white text-neutral-950 rounded-2xl font-black text-xs"
+            >
+              Отлично
+            </button>
+
+          </div>
+        </div>
+      )}
+
+    </div>
+  );
+}
